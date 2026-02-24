@@ -26,21 +26,9 @@ const projects = [
 ];
 
 const testimonials = [
-  {
-    name: 'Arjun Mehta',
-    role: 'Founder, NovaBrand Studio',
-    quote: 'Divyanshu turned our boring static site into something that actually makes people stop scrolling. Conversions went up 40% in the first month.',
-  },
-  {
-    name: 'Priya Sharma',
-    role: 'CEO, Elevate Coaching',
-    quote: "The scroll animations and layout hierarchy he built are next level. Our students say the website alone convinced them to enroll.",
-  },
-  {
-    name: 'Rohan Kapoor',
-    role: 'Creative Director, Pixel Forge',
-    quote: "Working with Divyanshu felt like hiring a creative partner, not just a developer. He thinks about user experience at every pixel.",
-  },
+  { quote: 'Divyanshu turned our boring static site into something that actually makes people stop scrolling. Conversions went up 40% in the first month.' },
+  { quote: 'The scroll animations and layout hierarchy he built are next level. Our students say the website alone convinced them to enroll.' },
+  { quote: 'Working with Divyanshu felt like hiring a creative partner, not just a developer. He thinks about user experience at every pixel.' },
 ];
 
 const fadeUp = {
@@ -295,7 +283,7 @@ export default function Home() {
             >
               {testimonials.map((t, i) => (
                 <motion.div
-                  key={t.name}
+                  key={i}
                   variants={fadeUp}
                   custom={i}
                   className="p-8 rounded-2xl border border-border bg-card"
@@ -305,13 +293,9 @@ export default function Home() {
                       <Sparkles key={j} className="size-4 text-amber-500 fill-amber-500" />
                     ))}
                   </div>
-                  <blockquote className="text-foreground leading-relaxed mb-6">
+                  <blockquote className="text-foreground leading-relaxed">
                     "{t.quote}"
                   </blockquote>
-                  <div>
-                    <p className="font-semibold text-sm">{t.name}</p>
-                    <p className="text-xs text-muted-foreground">{t.role}</p>
-                  </div>
                 </motion.div>
               ))}
             </motion.div>
