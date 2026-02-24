@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from 'next-themes';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { cn } from '@/lib/utils';
 
@@ -15,6 +16,7 @@ const navLinks = [
 export function Header() {
   const { isScrolled } = useScrollPosition();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
 
   return (
     <motion.header
@@ -56,6 +58,17 @@ export function Header() {
                 {link.name}
               </a>
             ))}
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className={cn(
+                'size-9 flex items-center justify-center rounded-full transition-colors',
+                isScrolled ? 'text-foreground hover:bg-accent' : 'text-white/80 hover:text-white'
+              )}
+              aria-label="Toggle dark mode"
+            >
+              <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </button>
             <a
               href="mailto:divyanshurathore2806@gmail.com"
               className="px-5 py-2 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-all"
