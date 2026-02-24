@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { cn } from '@/lib/utils';
+import logo from '@/assets/logo.png';
 
 const navLinks = [
   { name: 'Services', href: '#services' },
@@ -34,12 +35,13 @@ export function Header() {
         <div className="flex items-center justify-between h-16">
           <a
             href="#"
-            className={cn(
+            className="flex items-center gap-2"
+          >
+            <img src={logo} alt="Logo" className="h-8 w-8 object-contain" />
+            <span className={cn(
               'text-lg font-bold tracking-widest transition-colors duration-300',
               isScrolled ? 'text-foreground' : 'text-white'
-            )}
-          >
-            DIVYANSHU
+            )}>DIVYANSHU</span>
           </a>
 
           {/* Desktop */}
