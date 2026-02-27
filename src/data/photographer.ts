@@ -32,7 +32,7 @@ Whether working on editorial assignments or commercial projects, I strive to cre
   phone: '+1 (555) 123-4567',
   availability: 'Currently booking for Q2 2025',
   socialLinks: {
-    instagram: 'https://instagram.com/sarahmitchellphoto',
+    instagram: 'https://www.instagram.com/divraweb?igsh=MWJzOGRxczZsNnJ6bw==',
     linkedin: 'https://linkedin.com/in/sarahmitchell',
     behance: 'https://behance.net/sarahmitchell'
   },
