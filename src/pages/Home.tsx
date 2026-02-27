@@ -23,6 +23,11 @@ const projects = [
     description: 'High-conversion landing page crafted with motion UI and clear structure to maximize student engagement.',
     link: 'https://gyaaninstitute.vercel.app/',
   },
+  {
+    title: 'Landing Page for Restaurant',
+    description: 'Modern restaurant site with booking automation.',
+    link: 'https://indian-era.netlify.app/',
+  },
 ];
 
 const testimonials = [

@@ -75,10 +75,11 @@ export default function About() {
                     href={photographerInfo.socialLinks.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-3 border border-border rounded-sm hover:bg-accent transition-colors"
+                    className="flex items-center gap-2 p-3 border border-border rounded-sm hover:bg-accent transition-colors"
                     aria-label="Instagram"
                   >
                     <Instagram className="size-5" />
+                    <span className="text-sm font-medium">divraweb</span>
                   </a>
                 )}
                 {photographerInfo.socialLinks.linkedin && (

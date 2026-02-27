@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram } from 'lucide-react';
 import { photographerInfo } from '@/data/photographer';
 import { ContactForm } from '@/components/forms/ContactForm';
 import { Separator } from '@/components/ui/separator';
@@ -127,6 +127,26 @@ export default function Contact() {
                     <p className="text-base md:text-lg font-light">
                       {photographerInfo.location}
                     </p>
+                  </div>
+                </div>
+
+                {/* Instagram */}
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-sm bg-accent">
+                    <Instagram className="size-5 text-muted-foreground" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-light tracking-wide text-muted-foreground">
+                      Instagram
+                    </p>
+                    <a
+                      href="https://www.instagram.com/divraweb?igsh=MWJzOGRxczZsNnJ6bw=="
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base md:text-lg font-light hover:text-muted-foreground transition-colors"
+                    >
+                      @divraweb
+                    </a>
                   </div>
                 </div>
               </div>
