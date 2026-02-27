@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box } from 'lucide-react';
+import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box, Instagram } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { useRef } from 'react';
@@ -321,13 +321,22 @@ export default function Home() {
               <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
                 Have a project in mind? I'm currently available for freelance work and collaborations.
               </p>
-              <div className="mt-10">
+              <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a
                   href="mailto:divyanshurathore2806@gmail.com"
                   className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-foreground text-background font-semibold text-lg hover:opacity-90 transition-all"
                 >
                   <Mail className="size-5" />
                   divyanshurathore2806@gmail.com
+                </a>
+                <a
+                  href="https://www.instagram.com/divraweb?igsh=MWJzOGRxczZsNnJ6bw=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-8 py-5 rounded-full border border-border text-foreground font-semibold text-lg hover:bg-accent transition-all"
+                >
+                  <Instagram className="size-5" />
+                  @divraweb
                 </a>
               </div>
             </ScrollReveal>
