@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Menu, X, Moon, Sun } from 'lucide-react';
+import { Menu, X, Moon, Sun, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { cn } from '@/lib/utils';
-import logo from '@/assets/logo.png';
+import divrawebLogo from '@/assets/divraweb-logo.jpg';
 
 const navLinks = [
   { name: 'Services', href: '#services' },
@@ -37,11 +37,7 @@ export function Header() {
             href="#"
             className="flex items-center gap-2"
           >
-            <img src={logo} alt="Logo" className="h-8 w-8 object-contain" />
-            <span className={cn(
-              'text-lg font-bold tracking-widest transition-colors duration-300',
-              isScrolled ? 'text-foreground' : 'text-white'
-            )}>DIVYANSHU</span>
+            <img src={divrawebLogo} alt="divraweb logo" className="h-8 rounded object-contain" />
           </a>
 
           {/* Desktop */}
@@ -71,6 +67,18 @@ export function Header() {
               <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
               <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             </button>
+            <a
+              href="https://www.instagram.com/divraweb?igsh=MWJzOGRxczZsNnJ6bw=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                'size-9 flex items-center justify-center rounded-full transition-colors',
+                isScrolled ? 'text-foreground hover:bg-accent' : 'text-white/80 hover:text-white'
+              )}
+              aria-label="Instagram"
+            >
+              <Instagram className="size-4" />
+            </a>
             <a
               href="mailto:divyanshurathore2806@gmail.com"
               className="px-5 py-2 rounded-full bg-white text-black text-sm font-semibold hover:bg-white/90 transition-all"

@@ -1,4 +1,4 @@
-import { Mail } from 'lucide-react';
+import { Mail, Instagram } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -7,13 +7,24 @@ export function Footer() {
         <p className="text-sm text-muted-foreground">
           © {new Date().getFullYear()} Divyanshu Rathore. All rights reserved.
         </p>
-        <a
-          href="mailto:divyanshurathore2806@gmail.com"
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <Mail className="size-4" />
-          divyanshurathore2806@gmail.com
-        </a>
+        <div className="flex items-center gap-6">
+          <a
+            href="https://www.instagram.com/divraweb?igsh=MWJzOGRxczZsNnJ6bw=="
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Instagram className="size-4" />
+            @divraweb
+          </a>
+          <a
+            href="mailto:divyanshurathore2806@gmail.com"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Mail className="size-4" />
+            divyanshurathore2806@gmail.com
+          </a>
+        </div>
       </div>
     </footer>
   );
