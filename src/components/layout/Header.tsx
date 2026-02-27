@@ -37,7 +37,7 @@ export function Header() {
             href="#"
             className="flex items-center gap-2"
           >
-            <img src={divrawebLogo} alt="divraweb logo" className="h-8 rounded object-contain" />
+            <img src={divrawebLogo} alt="divraweb logo" className="h-8 rounded object-contain transition-all duration-300 hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)] hover:scale-105" />
           </a>
 
           {/* Desktop */}
