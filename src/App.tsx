@@ -9,6 +9,7 @@ import { SkipToContent } from "@/components/ui/SkipToContent";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { lazy, Suspense } from "react";
 import { LoadingFallback } from "@/components/ui/LoadingFallback";
+import { ChatWidget } from "@/components/chatbot/ChatWidget";
 
 const Home = lazy(() => import("./pages/Home"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -33,6 +34,7 @@ const App = () => (
               </Suspense>
             </Layout>
           </BrowserRouter>
+          <ChatWidget />
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
