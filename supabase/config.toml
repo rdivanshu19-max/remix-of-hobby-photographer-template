@@ -1,0 +1,7 @@
+project_id = "ifabdrwobjrdhrthmqot"
+
+[functions.chatbot]
+verify_jwt = false
+
+[functions.submit-lead]
+verify_jwt = false
