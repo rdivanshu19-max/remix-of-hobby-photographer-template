@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Send, Loader2, ArrowLeft, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import { LeadForm } from "./LeadForm";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -8,6 +7,8 @@ type Message = { role: "user" | "assistant"; content: string };
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chatbot`;
 const FORM_SUBMITTED_KEY = "divraweb_form_submitted";
 const FORM_OFFERED_KEY = "divraweb_form_offered";
+const MESSAGES_KEY = "divraweb_chat_messages";
+const CHAT_THEME_KEY = "divraweb_chat_theme";
 
 interface ChatWindowProps {
   onClose: () => void;
@@ -21,15 +22,27 @@ function hasOfferedForm(): boolean {
   return localStorage.getItem(FORM_OFFERED_KEY) === "true";
 }
 
-export function ChatWindow({ onClose }: ChatWindowProps) {
-  const { theme, setTheme } = useTheme();
-  const [messages, setMessages] = useState<Message[]>([
+function loadMessages(): Message[] {
+  try {
+    const saved = localStorage.getItem(MESSAGES_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return [
     {
       role: "assistant",
       content:
         "Hi there! 👋 I'm Divyanshu's AI assistant. How can I help you today? Whether you need a website, web app, or just want to learn about our services — I'm here to help!",
     },
-  ]);
+  ];
+}
+
+function loadChatTheme(): "light" | "dark" {
+  return (localStorage.getItem(CHAT_THEME_KEY) as "light" | "dark") || "light";
+}
+
+export function ChatWindow({ onClose }: ChatWindowProps) {
+  const [chatTheme, setChatTheme] = useState<"light" | "dark">(loadChatTheme);
+  const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -37,9 +50,33 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
   const [formOffered, setFormOffered] = useState(hasOfferedForm);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Persist messages
+  useEffect(() => {
+    localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
+  }, [messages]);
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
+
+  const toggleChatTheme = () => {
+    const next = chatTheme === "dark" ? "light" : "dark";
+    setChatTheme(next);
+    localStorage.setItem(CHAT_THEME_KEY, next);
+  };
+
+  const isDark = chatTheme === "dark";
+
+  // Theme classes scoped to chat only
+  const bg = isDark ? "bg-[#1a1a2e]" : "bg-white";
+  const headerBg = isDark ? "bg-[#16213e]" : "bg-primary";
+  const headerText = isDark ? "text-gray-100" : "text-primary-foreground";
+  const msgBg = isDark ? "bg-[#0f3460]" : "bg-secondary";
+  const msgText = isDark ? "text-gray-200" : "text-secondary-foreground";
+  const userBubble = isDark ? "bg-[#e94560] text-white" : "bg-primary text-primary-foreground";
+  const inputBg = isDark ? "bg-[#16213e] text-gray-200 placeholder:text-gray-500" : "bg-secondary text-secondary-foreground placeholder:text-muted-foreground";
+  const borderColor = isDark ? "border-[#0f3460]" : "border-border";
+  const btnBg = isDark ? "bg-[#e94560] text-white" : "bg-primary text-primary-foreground";
 
   const offerForm = useCallback(() => {
     if (formSubmitted || formOffered) return;
@@ -172,8 +209,8 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
 
   if (showForm) {
     return (
-      <>
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-primary text-primary-foreground">
+      <div className={`flex flex-col h-full ${bg}`}>
+        <div className={`flex items-center gap-3 px-4 py-3 border-b ${borderColor} ${headerBg} ${headerText}`}>
           <button onClick={() => setShowForm(false)} className="hover:opacity-70 transition-opacity">
             <ArrowLeft className="size-5" />
           </button>
@@ -182,17 +219,17 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
             <p className="text-xs opacity-80">Fill out the form below</p>
           </div>
         </div>
-        <LeadForm onSuccess={handleFormSuccess} />
-      </>
+        <LeadForm onSuccess={handleFormSuccess} chatTheme={chatTheme} />
+      </div>
     );
   }
 
   return (
-    <>
+    <div className={`flex flex-col h-full ${bg}`}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-primary text-primary-foreground">
+      <div className={`flex items-center justify-between px-4 py-3 border-b ${borderColor} ${headerBg} ${headerText}`}>
         <div className="flex items-center gap-3">
-          <div className="size-8 rounded-full bg-primary-foreground/20 flex items-center justify-center text-xs font-bold">
+          <div className="size-8 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">
             D
           </div>
           <div>
@@ -202,11 +239,11 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="size-8 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors flex items-center justify-center"
-            aria-label="Toggle theme"
+            onClick={toggleChatTheme}
+            className="size-8 rounded-full bg-white/20 hover:bg-white/30 transition-colors flex items-center justify-center"
+            aria-label="Toggle chat theme"
           >
-            {theme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+            {isDark ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
           </button>
           {!formSubmitted && (
             <button
@@ -217,7 +254,7 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
                   setShowForm(true);
                 }
               }}
-              className="text-xs px-3 py-1.5 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors"
+              className="text-xs px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
             >
               Contact Form
             </button>
@@ -232,8 +269,8 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-br-md"
-                  : "bg-secondary text-secondary-foreground rounded-bl-md"
+                  ? `${userBubble} rounded-br-md`
+                  : `${msgBg} ${msgText} rounded-bl-md`
               }`}
             >
               {msg.content}
@@ -242,7 +279,7 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex justify-start">
-            <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-2.5">
+            <div className={`${msgBg} rounded-2xl rounded-bl-md px-4 py-2.5`}>
               <Loader2 className="size-4 animate-spin text-muted-foreground" />
             </div>
           </div>
@@ -250,7 +287,7 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
       </div>
 
       {/* Input */}
-      <div className="border-t border-border p-3">
+      <div className={`border-t ${borderColor} p-3`}>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -262,18 +299,18 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 bg-secondary text-secondary-foreground rounded-full px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
+            className={`flex-1 ${inputBg} rounded-full px-4 py-2.5 text-sm outline-none border ${borderColor}`}
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="size-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-50 hover:opacity-90 transition-opacity"
+            className={`size-10 rounded-full ${btnBg} flex items-center justify-center disabled:opacity-50 hover:opacity-90 transition-opacity`}
           >
             <Send className="size-4" />
           </button>
         </form>
       </div>
-    </>
+    </div>
   );
 }
