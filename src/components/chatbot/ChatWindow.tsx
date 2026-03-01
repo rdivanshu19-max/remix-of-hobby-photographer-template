@@ -1,16 +1,28 @@
-import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, ArrowLeft } from "lucide-react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Send, Loader2, ArrowLeft, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { LeadForm } from "./LeadForm";
 
 type Message = { role: "user" | "assistant"; content: string };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chatbot`;
+const FORM_SUBMITTED_KEY = "divraweb_form_submitted";
+const FORM_OFFERED_KEY = "divraweb_form_offered";
 
 interface ChatWindowProps {
   onClose: () => void;
 }
 
+function hasSubmittedForm(): boolean {
+  return localStorage.getItem(FORM_SUBMITTED_KEY) === "true";
+}
+
+function hasOfferedForm(): boolean {
+  return localStorage.getItem(FORM_OFFERED_KEY) === "true";
+}
+
 export function ChatWindow({ onClose }: ChatWindowProps) {
+  const { theme, setTheme } = useTheme();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -21,15 +33,51 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(hasSubmittedForm);
+  const [formOffered, setFormOffered] = useState(hasOfferedForm);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
+  const offerForm = useCallback(() => {
+    if (formSubmitted || formOffered) return;
+    localStorage.setItem(FORM_OFFERED_KEY, "true");
+    setFormOffered(true);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content:
+          "I'd love to connect you with Divyanshu! Would you like to fill out a quick contact form so he can get back to you? Just reply **yes** or **no**.",
+      },
+    ]);
+  }, [formSubmitted, formOffered]);
+
   const sendMessage = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
+
+    // Check if user is responding to form offer
+    if (formOffered && !formSubmitted && !showForm) {
+      const lower = text.toLowerCase();
+      if (["yes", "yeah", "sure", "ok", "okay", "yep", "y"].some((w) => lower.includes(w))) {
+        setInput("");
+        setMessages((prev) => [...prev, { role: "user", content: text }]);
+        setShowForm(true);
+        return;
+      }
+      if (["no", "nah", "nope", "n", "not now", "later"].some((w) => lower.includes(w))) {
+        setInput("");
+        setMessages((prev) => [
+          ...prev,
+          { role: "user", content: text },
+          { role: "assistant", content: "No problem! Feel free to ask me anything else. 😊" },
+        ]);
+        return;
+      }
+    }
 
     const userMsg: Message = { role: "user", content: text };
     setMessages((prev) => [...prev, userMsg]);
@@ -88,9 +136,15 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
         }
       }
 
-      // Check if AI suggested the form
-      if (assistantSoFar.toLowerCase().includes("form") || assistantSoFar.toLowerCase().includes("fill out")) {
-        setTimeout(() => setShowForm(true), 1500);
+      // Offer form once after a few messages, only if not already submitted/offered
+      if (!formSubmitted && !formOffered && messages.length >= 3) {
+        if (
+          assistantSoFar.toLowerCase().includes("form") ||
+          assistantSoFar.toLowerCase().includes("fill out") ||
+          assistantSoFar.toLowerCase().includes("get back to you")
+        ) {
+          setTimeout(() => offerForm(), 1500);
+        }
       }
     } catch (e) {
       console.error(e);
@@ -103,6 +157,19 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
     }
   };
 
+  const handleFormSuccess = () => {
+    localStorage.setItem(FORM_SUBMITTED_KEY, "true");
+    setFormSubmitted(true);
+    setShowForm(false);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "assistant",
+        content: "Thank you! 🎉 Your details have been submitted. Divyanshu will reach out to you soon!",
+      },
+    ]);
+  };
+
   if (showForm) {
     return (
       <>
@@ -110,24 +177,12 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
           <button onClick={() => setShowForm(false)} className="hover:opacity-70 transition-opacity">
             <ArrowLeft className="size-5" />
           </button>
-          <div>
+          <div className="flex-1">
             <h3 className="font-medium text-sm">Get in Touch</h3>
             <p className="text-xs opacity-80">Fill out the form below</p>
           </div>
         </div>
-        <LeadForm
-          onSuccess={() => {
-            setShowForm(false);
-            setMessages((prev) => [
-              ...prev,
-              {
-                role: "assistant",
-                content:
-                  "Thank you! 🎉 Your details have been submitted. Divyanshu will reach out to you soon!",
-              },
-            ]);
-          }}
-        />
+        <LeadForm onSuccess={handleFormSuccess} />
       </>
     );
   }
@@ -136,16 +191,38 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
     <>
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-primary text-primary-foreground">
-        <div>
-          <h3 className="font-medium text-sm">Divraweb Assistant</h3>
-          <p className="text-xs opacity-80">Typically replies instantly</p>
+        <div className="flex items-center gap-3">
+          <div className="size-8 rounded-full bg-primary-foreground/20 flex items-center justify-center text-xs font-bold">
+            D
+          </div>
+          <div>
+            <h3 className="font-medium text-sm">Divraweb Assistant</h3>
+            <p className="text-xs opacity-80">Typically replies instantly</p>
+          </div>
         </div>
-        <button
-          onClick={() => setShowForm(true)}
-          className="text-xs px-3 py-1.5 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors"
-        >
-          Contact Form
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="size-8 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors flex items-center justify-center"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+          </button>
+          {!formSubmitted && (
+            <button
+              onClick={() => {
+                if (!formOffered) {
+                  offerForm();
+                } else {
+                  setShowForm(true);
+                }
+              }}
+              className="text-xs px-3 py-1.5 rounded-full bg-primary-foreground/20 hover:bg-primary-foreground/30 transition-colors"
+            >
+              Contact Form
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Messages */}
@@ -185,7 +262,7 @@ export function ChatWindow({ onClose }: ChatWindowProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 bg-secondary rounded-full px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
+            className="flex-1 bg-secondary text-secondary-foreground rounded-full px-4 py-2.5 text-sm outline-none placeholder:text-muted-foreground"
             disabled={isLoading}
           />
           <button
