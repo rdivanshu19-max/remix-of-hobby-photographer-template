@@ -28,6 +28,21 @@ const projects = [
     description: 'Modern restaurant site with booking automation.',
     link: 'https://indian-era.netlify.app/',
   },
+  {
+    title: 'RANKERS STAR',
+    description: 'AI-powered edtech platform for serious JEE aspirants with smart mock tests, detailed performance analysis, curated resources, and personalized insights for focused improvement.',
+    link: 'https://rankers-stars.vercel.app/',
+  },
+  {
+    title: 'NEXUS CBT',
+    description: 'AI-powered CBT platform for JEE and NEET aspirants that turns exam PDFs into a real test interface with timers, navigation, negative marking, analytics, and AI insights.',
+    link: 'https://nexuscbt.vercel.app/',
+  },
+  {
+    title: 'Content Catalyst Hub',
+    description: 'Structured, SEO-focused content platform built for clean reading, fast performance, curated categories, and long-term organic growth through consistent publishing.',
+    link: 'https://contentcatalysthub.vercel.app/',
+  },
 ];
 
 const testimonials = [

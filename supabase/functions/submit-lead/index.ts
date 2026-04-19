@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -36,9 +38,10 @@ serve(async (req) => {
       throw new Error("Failed to save lead");
     }
 
-    // Send email notification via Resend
+    // Send email notification
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    if (RESEND_API_KEY) {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    if (RESEND_API_KEY && LOVABLE_API_KEY) {
       const emailHtml = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #1a1a1a; border-bottom: 2px solid #eee; padding-bottom: 10px;">🎯 New Lead from Divraweb</h2>
@@ -55,11 +58,12 @@ serve(async (req) => {
       `;
 
       try {
-        const emailResp = await fetch("https://api.resend.com/emails", {
+        const emailResp = await fetch(`${GATEWAY_URL}/emails`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
+            Authorization: `Bearer ${LOVABLE_API_KEY}`,
+            "X-Connection-Api-Key": RESEND_API_KEY,
           },
           body: JSON.stringify({
             from: "Divraweb <onboarding@resend.dev>",
@@ -79,7 +83,7 @@ serve(async (req) => {
         console.error("Email send failed:", emailErr);
       }
     } else {
-      console.warn("RESEND_API_KEY not configured, skipping email");
+      console.warn("Email secrets not fully configured, skipping email");
     }
 
     return new Response(
