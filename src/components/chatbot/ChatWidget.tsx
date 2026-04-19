@@ -2,12 +2,15 @@ import { useState } from "react";
 import { MessageCircle, X, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChatWindow } from "./ChatWindow";
+import { ChatWelcomePopup } from "./ChatWelcomePopup";
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="fixed bottom-5 right-5 z-[9999]">
+      <ChatWelcomePopup onStartChat={() => setIsOpen(true)} />
+
       <AnimatePresence>
         {isOpen && (
           <motion.div
