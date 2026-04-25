@@ -31,13 +31,13 @@ export function Header() {
           : 'bg-transparent'
       )}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-3 h-16">
           <a
             href="#"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 shrink-0"
           >
-            <img src={divrawebLogo} alt="divraweb logo" className="h-8 rounded object-contain transition-all duration-300 hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)] hover:scale-105" />
+            <img src={divrawebLogo} alt="divraweb logo" className="h-7 sm:h-8 rounded object-contain transition-all duration-300 hover:drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)] hover:scale-105" />
           </a>
 
           {/* Desktop */}
@@ -88,7 +88,7 @@ export function Header() {
           </nav>
 
           {/* Mobile actions */}
-          <div className="md:hidden flex items-center gap-1">
+          <div className="md:hidden flex items-center gap-2 shrink-0">
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className={cn(
