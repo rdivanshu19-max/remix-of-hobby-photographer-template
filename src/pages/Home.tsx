@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box, Instagram } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const services = [
   { icon: Box, title: '3D Landing Pages', description: 'Immersive three-dimensional experiences that captivate from the first scroll.' },
