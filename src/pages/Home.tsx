@@ -225,61 +225,123 @@ export default function Home() {
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
-              <div className="mt-10 flex flex-wrap gap-2 sm:gap-3">
-                {projectCategories.map((cat) => {
-                  const isActive = activeCategory === cat;
-                  return (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                        isActive
-                          ? 'bg-foreground text-background border-foreground'
-                          : 'bg-transparent text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
-                      }`}
-                    >
-                      {cat}
-                    </button>
-                  );
-                })}
+              <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
+                  {projectCategories.map((cat) => {
+                    const isActive = activeCategory === cat;
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setActiveCategory(cat)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                          isActive
+                            ? 'bg-foreground text-background border-foreground'
+                            : 'bg-transparent text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  <label htmlFor="sort-projects" className="text-xs uppercase tracking-wider text-muted-foreground">
+                    Sort
+                  </label>
+                  <select
+                    id="sort-projects"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'newest' | 'az')}
+                    className="px-3 py-2 rounded-full text-sm font-medium bg-transparent text-foreground border border-border hover:border-primary/40 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  >
+                    <option value="newest">Newest</option>
+                    <option value="az">A–Z</option>
+                  </select>
+                </div>
               </div>
             </ScrollReveal>
 
-            <motion.div
-              layout
-              className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8"
-            >
-              {filteredProjects.map((project, i) => (
-                <ScrollReveal key={project.title} delay={Math.min(i * 0.1, 0.4)}>
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 sm:p-8 hover:border-primary/30 transition-all duration-500 hover:shadow-xl"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
-                        {project.category}
-                      </span>
-                      <ExternalLink className="size-4 sm:size-5 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                    </div>
-                    <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors mb-3">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4">
-                      {project.description}
-                    </p>
-                    <div className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                      View Live <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
-                    </div>
-                  </a>
-                </ScrollReveal>
-              ))}
-            </motion.div>
+            {filteredProjects.length > 0 ? (
+              <motion.div
+                layout
+                className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8"
+              >
+                {filteredProjects.map((project, i) => (
+                  <ScrollReveal key={project.title} delay={Math.min(i * 0.1, 0.4)}>
+                    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card hover:border-primary/30 transition-all duration-500 hover:shadow-xl">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative block aspect-[16/10] overflow-hidden bg-gradient-to-br from-primary/15 via-muted to-accent/20"
+                        aria-label={`Open ${project.title}`}
+                      >
+                        <img
+                          src={getThumb(project.link)}
+                          alt={`${project.title} preview`}
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <span className="text-3xl font-black tracking-tight text-foreground/20 select-none">
+                            {project.title.split(' ').map((w) => w[0]).join('').slice(0, 3)}
+                          </span>
+                        </div>
+                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />
+                      </a>
 
-            {filteredProjects.length === 0 && (
-              <p className="mt-10 text-center text-muted-foreground">No projects in this category yet.</p>
+                      <div className="flex flex-1 flex-col p-5 sm:p-6">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
+                            {project.category}
+                          </span>
+                          <span className="text-xs text-muted-foreground">{project.year}</span>
+                        </div>
+                        <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors mb-2">
+                          {project.title}
+                        </h3>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4">
+                          {project.description}
+                        </p>
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-5 inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:self-start px-5 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-all"
+                        >
+                          View Live Project
+                          <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                        </a>
+                      </div>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </motion.div>
+            ) : (
+              <ScrollReveal>
+                <div className="mt-10 rounded-2xl border border-dashed border-border bg-card/50 p-10 sm:p-14 text-center">
+                  <div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <Layers className="size-6" />
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-semibold mb-2">No projects in “{activeCategory}” yet</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto mb-6">
+                    I'm cooking up new work in this category. In the meantime, browse all projects.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveCategory('All')}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-all"
+                  >
+                    Show all projects
+                    <ArrowRight className="size-4" />
+                  </button>
+                </div>
+              </ScrollReveal>
             )}
 
             <ScrollReveal delay={0.3}>
