@@ -17,28 +17,35 @@ const projects = [
     title: 'Coaching Landing Page',
     description: 'High-conversion landing page crafted with motion UI and clear structure to maximize student engagement.',
     link: 'https://gyaaninstitute.vercel.app/',
+    category: 'Landing Page',
   },
   {
     title: 'Landing Page for Restaurant',
-    description: 'Modern restaurant site with booking automation.',
+    description: 'Modern restaurant site with booking automation and clean visual hierarchy that converts visitors into reservations.',
     link: 'https://indian-era.netlify.app/',
+    category: 'Landing Page',
   },
   {
     title: 'RANKERS STAR',
     description: 'AI-powered edtech platform for serious JEE aspirants with smart mock tests, detailed performance analysis, curated resources, and personalized insights for focused improvement.',
     link: 'https://rankers-stars.vercel.app/',
+    category: 'EdTech',
   },
   {
     title: 'NEXUS CBT',
     description: 'AI-powered CBT platform for JEE and NEET aspirants that turns exam PDFs into a real test interface with timers, navigation, negative marking, analytics, and AI insights.',
     link: 'https://nexuscbt.vercel.app/',
+    category: 'EdTech',
   },
   {
     title: 'Content Catalyst Hub',
     description: 'Structured, SEO-focused content platform built for clean reading, fast performance, curated categories, and long-term organic growth through consistent publishing.',
     link: 'https://contentcatalysthub.vercel.app/',
+    category: 'Content',
   },
 ];
+
+const projectCategories = ['All', 'Landing Page', 'EdTech', 'Content'];
 
 const testimonials = [
   { quote: 'Divyanshu turned our boring static site into something that actually makes people stop scrolling. Conversions went up 40% in the first month.' },
