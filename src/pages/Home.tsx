@@ -14,11 +14,6 @@ const services = [
 
 const projects = [
   {
-    title: 'Client Portfolio',
-    description: 'A cinematic 3D portfolio built to demonstrate motion-driven design and modern frontend execution.',
-    link: 'https://surenderportfolio.vercel.app',
-  },
-  {
     title: 'Coaching Landing Page',
     description: 'High-conversion landing page crafted with motion UI and clear structure to maximize student engagement.',
     link: 'https://gyaaninstitute.vercel.app/',
