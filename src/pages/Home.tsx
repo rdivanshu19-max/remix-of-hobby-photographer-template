@@ -213,29 +213,63 @@ export default function Home() {
               </h2>
             </ScrollReveal>
 
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-              {projects.map((project, i) => (
-                <ScrollReveal key={project.title} delay={i * 0.15}>
+            <ScrollReveal delay={0.1}>
+              <div className="mt-10 flex flex-wrap gap-2 sm:gap-3">
+                {projectCategories.map((cat) => {
+                  const isActive = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                        isActive
+                          ? 'bg-foreground text-background border-foreground'
+                          : 'bg-transparent text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+
+            <motion.div
+              layout
+              className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8"
+            >
+              {filteredProjects.map((project, i) => (
+                <ScrollReveal key={project.title} delay={Math.min(i * 0.1, 0.4)}>
                   <a
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/30 transition-all duration-500 hover:shadow-xl"
+                    className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 sm:p-8 hover:border-primary/30 transition-all duration-500 hover:shadow-xl"
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-2xl font-semibold group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h3>
-                      <ExternalLink className="size-5 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
+                        {project.category}
+                      </span>
+                      <ExternalLink className="size-4 sm:size-5 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     </div>
-                    <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                      View Live <ArrowRight className="size-3" />
+                    <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors mb-3">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4">
+                      {project.description}
+                    </p>
+                    <div className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                      View Live <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
                     </div>
                   </a>
                 </ScrollReveal>
               ))}
-            </div>
+            </motion.div>
+
+            {filteredProjects.length === 0 && (
+              <p className="mt-10 text-center text-muted-foreground">No projects in this category yet.</p>
+            )}
 
             <ScrollReveal delay={0.3}>
               <div className="mt-12 text-center">
