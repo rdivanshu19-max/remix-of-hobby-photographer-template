@@ -87,14 +87,27 @@ export function Header() {
             </a>
           </nav>
 
-          {/* Mobile toggle */}
-          <button
-            className={cn('md:hidden size-9 flex items-center justify-center', isScrolled ? 'text-foreground' : 'text-white')}
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          {/* Mobile actions */}
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className={cn(
+                'size-9 flex items-center justify-center rounded-full transition-colors',
+                isScrolled ? 'text-foreground hover:bg-accent' : 'text-white/90 hover:text-white'
+              )}
+              aria-label="Toggle dark mode"
+            >
+              <Sun className="size-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute size-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </button>
+            <button
+              className={cn('size-9 flex items-center justify-center', isScrolled ? 'text-foreground' : 'text-white')}
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
