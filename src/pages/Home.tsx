@@ -77,7 +77,13 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const [activeCategory, setActiveCategory] = useState<string>('All');
-  const filteredProjects = activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory);
+  const [sortBy, setSortBy] = useState<'newest' | 'az'>('newest');
+  const filteredProjects = (activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory))
+    .slice()
+    .sort((a, b) => (sortBy === 'az' ? a.title.localeCompare(b.title) : b.year - a.year));
+
+  const getThumb = (url: string) =>
+    `https://image.thum.io/get/width/800/crop/600/noanimate/${url}`;
 
   return (
     <>
