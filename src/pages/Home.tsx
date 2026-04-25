@@ -275,24 +275,12 @@ export default function Home() {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="relative block aspect-[16/10] overflow-hidden bg-gradient-to-br from-primary/15 via-muted to-accent/20"
+                        className="relative block aspect-[16/10] overflow-hidden"
                         aria-label={`Open ${project.title}`}
                       >
-                        <img
-                          src={getThumb(project.link)}
-                          alt={`${project.title} preview`}
-                          loading="lazy"
-                          className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).style.display = 'none';
-                          }}
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <span className="text-3xl font-black tracking-tight text-foreground/20 select-none">
-                            {project.title.split(' ').map((w) => w[0]).join('').slice(0, 3)}
-                          </span>
+                        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+                          <ProjectThumbnail url={project.link} title={project.title} />
                         </div>
-                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent" />
                       </a>
 
                       <div className="flex flex-1 flex-col p-5 sm:p-6">
