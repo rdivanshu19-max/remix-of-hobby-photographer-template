@@ -196,3 +196,7 @@ All colors MUST be HSL.
   }
 }
 
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
