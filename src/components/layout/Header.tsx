@@ -88,7 +88,7 @@ export function Header() {
           </nav>
 
           {/* Mobile actions */}
-          <div className="md:hidden flex items-center gap-1">
+          <div className="md:hidden flex items-center gap-2 shrink-0">
             <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className={cn(
