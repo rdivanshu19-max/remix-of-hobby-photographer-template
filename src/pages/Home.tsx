@@ -83,9 +83,6 @@ export default function Home() {
     .slice()
     .sort((a, b) => (sortBy === 'az' ? a.title.localeCompare(b.title) : b.year - a.year));
 
-  const getThumb = (url: string) =>
-    `https://image.thum.io/get/width/800/crop/600/noanimate/${url}`;
-
   return (
     <>
       <SEOHead
