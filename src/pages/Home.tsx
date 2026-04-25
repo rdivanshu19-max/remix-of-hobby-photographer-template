@@ -2,6 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box, Instagram } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
+import { ProjectThumbnail } from '@/components/portfolio/ProjectThumbnail';
 import { useRef, useState } from 'react';
 
 const services = [
