@@ -2,7 +2,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box, Instagram } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 const services = [
   { icon: Box, title: '3D Landing Pages', description: 'Immersive three-dimensional experiences that captivate from the first scroll.' },
@@ -17,28 +17,35 @@ const projects = [
     title: 'Coaching Landing Page',
     description: 'High-conversion landing page crafted with motion UI and clear structure to maximize student engagement.',
     link: 'https://gyaaninstitute.vercel.app/',
+    category: 'Landing Page',
   },
   {
     title: 'Landing Page for Restaurant',
-    description: 'Modern restaurant site with booking automation.',
+    description: 'Modern restaurant site with booking automation and clean visual hierarchy that converts visitors into reservations.',
     link: 'https://indian-era.netlify.app/',
+    category: 'Landing Page',
   },
   {
     title: 'RANKERS STAR',
     description: 'AI-powered edtech platform for serious JEE aspirants with smart mock tests, detailed performance analysis, curated resources, and personalized insights for focused improvement.',
     link: 'https://rankers-stars.vercel.app/',
+    category: 'EdTech',
   },
   {
     title: 'NEXUS CBT',
     description: 'AI-powered CBT platform for JEE and NEET aspirants that turns exam PDFs into a real test interface with timers, navigation, negative marking, analytics, and AI insights.',
     link: 'https://nexuscbt.vercel.app/',
+    category: 'EdTech',
   },
   {
     title: 'Content Catalyst Hub',
     description: 'Structured, SEO-focused content platform built for clean reading, fast performance, curated categories, and long-term organic growth through consistent publishing.',
     link: 'https://contentcatalysthub.vercel.app/',
+    category: 'Content',
   },
 ];
+
+const projectCategories = ['All', 'Landing Page', 'EdTech', 'Content'];
 
 const testimonials = [
   { quote: 'Divyanshu turned our boring static site into something that actually makes people stop scrolling. Conversions went up 40% in the first month.' },
@@ -64,6 +71,8 @@ export default function Home() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const filteredProjects = activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory);
 
   return (
     <>
@@ -204,29 +213,63 @@ export default function Home() {
               </h2>
             </ScrollReveal>
 
-            <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-              {projects.map((project, i) => (
-                <ScrollReveal key={project.title} delay={i * 0.15}>
+            <ScrollReveal delay={0.1}>
+              <div className="mt-10 flex flex-wrap gap-2 sm:gap-3">
+                {projectCategories.map((cat) => {
+                  const isActive = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setActiveCategory(cat)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                        isActive
+                          ? 'bg-foreground text-background border-foreground'
+                          : 'bg-transparent text-muted-foreground border-border hover:border-primary/40 hover:text-foreground'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+            </ScrollReveal>
+
+            <motion.div
+              layout
+              className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 lg:gap-8"
+            >
+              {filteredProjects.map((project, i) => (
+                <ScrollReveal key={project.title} delay={Math.min(i * 0.1, 0.4)}>
                   <a
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block relative overflow-hidden rounded-2xl border border-border bg-card p-8 hover:border-primary/30 transition-all duration-500 hover:shadow-xl"
+                    className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 sm:p-8 hover:border-primary/30 transition-all duration-500 hover:shadow-xl"
                   >
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-2xl font-semibold group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h3>
-                      <ExternalLink className="size-5 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
+                        {project.category}
+                      </span>
+                      <ExternalLink className="size-4 sm:size-5 text-muted-foreground group-hover:text-primary transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     </div>
-                    <p className="text-muted-foreground leading-relaxed">{project.description}</p>
-                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                      View Live <ArrowRight className="size-3" />
+                    <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors mb-3">
+                      {project.title}
+                    </h3>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4">
+                      {project.description}
+                    </p>
+                    <div className="mt-auto pt-5 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                      View Live <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
                     </div>
                   </a>
                 </ScrollReveal>
               ))}
-            </div>
+            </motion.div>
+
+            {filteredProjects.length === 0 && (
+              <p className="mt-10 text-center text-muted-foreground">No projects in this category yet.</p>
+            )}
 
             <ScrollReveal delay={0.3}>
               <div className="mt-12 text-center">
