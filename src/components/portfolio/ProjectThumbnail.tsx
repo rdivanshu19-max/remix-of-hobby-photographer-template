@@ -35,7 +35,9 @@ export function ProjectThumbnail({ url, title }: ProjectThumbnailProps) {
   const domain = getDomain(url);
 
   return (
-    <div className={`absolute inset-0 bg-gradient-to-br ${palette} overflow-hidden`}>
+    <div className={`absolute inset-0 bg-gradient-to-br ${palette} overflow-hidden ring-1 ring-inset ring-white/10`}>
+      {/* Tone layer — slightly darken in light mode for text contrast, lift in dark */}
+      <div className="absolute inset-0 bg-black/10 dark:bg-black/0" />
       {/* Decorative grid */}
       <div
         className="absolute inset-0 opacity-20"
