@@ -3,13 +3,17 @@ interface ProjectThumbnailProps {
   title: string;
 }
 
+// Palettes tuned to read well on both light & dark backgrounds:
+// deep saturated base + brighter mid + accent highlight
 const PALETTES = [
-  'from-indigo-600 via-purple-600 to-pink-600',
-  'from-emerald-600 via-teal-600 to-cyan-600',
-  'from-amber-500 via-orange-600 to-rose-600',
-  'from-sky-600 via-blue-600 to-indigo-700',
-  'from-fuchsia-600 via-pink-600 to-rose-600',
-  'from-lime-500 via-green-600 to-emerald-700',
+  'from-indigo-700 via-purple-600 to-fuchsia-500',
+  'from-emerald-700 via-teal-600 to-cyan-400',
+  'from-orange-700 via-rose-600 to-pink-500',
+  'from-blue-800 via-sky-600 to-cyan-400',
+  'from-violet-800 via-fuchsia-600 to-rose-500',
+  'from-green-800 via-lime-600 to-yellow-400',
+  'from-slate-800 via-zinc-700 to-neutral-500',
+  'from-red-800 via-orange-600 to-amber-400',
 ];
 
 function hash(str: string) {
