@@ -528,6 +528,12 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      <CaseStudyModal
+        project={caseStudy?.project ?? null}
+        index={caseStudy?.index ?? 0}
+        onClose={() => setCaseStudy(null)}
+      />
     </>
   );
 }
