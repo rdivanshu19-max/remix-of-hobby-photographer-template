@@ -122,7 +122,7 @@ export function CaseStudyModal({ project, index, onClose }: CaseStudyModalProps)
             <X className="size-4" /> Close
           </button>
 
-          <div ref={scrollRef} className="h-screen overflow-y-auto">
+          <div ref={scrollRef} className="relative h-screen overflow-y-auto">
             {/* HERO */}
             <motion.section
               className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br ${palette} text-white px-6`}
