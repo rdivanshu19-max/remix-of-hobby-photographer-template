@@ -49,9 +49,23 @@ const projects = [
     category: 'Content',
     year: 2026,
   },
+  {
+    title: 'GRAVITAS',
+    description: 'A psychological performance platform for JEE & NEET aspirants. Beyond practice and tests — it maps your mistakes, creates urgency, gamifies revision, and builds self-awareness. Not a study app. A mirror.',
+    link: 'https://gravitas-opal.vercel.app/',
+    category: 'EdTech',
+    year: 2026,
+  },
+  {
+    title: 'What If I Was Born There',
+    description: 'A life simulator that reveals what your life would look like if you were born in a different country — powered by real data across 50+ nations.',
+    link: 'https://lifesimulation-two.vercel.app/',
+    category: 'Experiments',
+    year: 2026,
+  },
 ];
 
-const projectCategories = ['All', 'Landing Page', 'EdTech', 'Content'];
+const projectCategories = ['All', 'Landing Page', 'EdTech', 'Content', 'Experiments'];
 
 const testimonials = [
   { quote: 'Divyanshu turned our boring static site into something that actually makes people stop scrolling. Conversions went up 40% in the first month.' },
@@ -288,9 +302,14 @@ export default function Home() {
                           </span>
                           <span className="text-xs text-muted-foreground">{project.year}</span>
                         </div>
-                        <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors mb-2">
-                          {project.title}
-                        </h3>
+                        <div className="flex items-start justify-between gap-3 mb-2">
+                          <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors">
+                            {project.title}
+                          </h3>
+                          <span className="shrink-0 mt-1 text-xs font-mono text-muted-foreground tabular-nums">
+                            {project.year}
+                          </span>
+                        </div>
                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4">
                           {project.description}
                         </p>
@@ -300,7 +319,7 @@ export default function Home() {
                           rel="noopener noreferrer"
                           className="mt-5 inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:self-start px-5 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-all"
                         >
-                          View Live Project
+                          View Live Project · {project.year}
                           <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
                         </a>
                       </div>

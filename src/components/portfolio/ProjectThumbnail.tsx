@@ -1,20 +1,16 @@
-import { useEffect, useState } from 'react';
-
 interface ProjectThumbnailProps {
   url: string;
   title: string;
 }
 
 const PALETTES = [
-  'from-indigo-500/30 via-purple-500/20 to-pink-500/30',
-  'from-emerald-500/30 via-teal-500/20 to-cyan-500/30',
-  'from-amber-500/30 via-orange-500/20 to-rose-500/30',
-  'from-sky-500/30 via-blue-500/20 to-indigo-500/30',
-  'from-fuchsia-500/30 via-pink-500/20 to-rose-500/30',
-  'from-lime-500/30 via-green-500/20 to-emerald-500/30',
+  'from-indigo-600 via-purple-600 to-pink-600',
+  'from-emerald-600 via-teal-600 to-cyan-600',
+  'from-amber-500 via-orange-600 to-rose-600',
+  'from-sky-600 via-blue-600 to-indigo-700',
+  'from-fuchsia-600 via-pink-600 to-rose-600',
+  'from-lime-500 via-green-600 to-emerald-700',
 ];
-
-const CACHE_KEY = 'divraweb_thumb_cache_v1';
 
 function hash(str: string) {
   let h = 0;
@@ -22,87 +18,53 @@ function hash(str: string) {
   return Math.abs(h);
 }
 
-function getInitials(title: string) {
-  return title
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 3)
-    .toUpperCase();
-}
-
-function readCache(): Record<string, 'ok' | 'fail'> {
+function getDomain(url: string) {
   try {
-    return JSON.parse(sessionStorage.getItem(CACHE_KEY) || '{}');
+    return new URL(url).hostname.replace(/^www\./, '');
   } catch {
-    return {};
-  }
-}
-
-function writeCache(url: string, status: 'ok' | 'fail') {
-  try {
-    const c = readCache();
-    c[url] = status;
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify(c));
-  } catch {
-    /* ignore */
+    return url;
   }
 }
 
 export function ProjectThumbnail({ url, title }: ProjectThumbnailProps) {
-  const cached = typeof window !== 'undefined' ? readCache()[url] : undefined;
-  const [status, setStatus] = useState<'loading' | 'ok' | 'fail'>(
-    cached === 'fail' ? 'fail' : cached === 'ok' ? 'ok' : 'loading'
-  );
-
   const palette = PALETTES[hash(title) % PALETTES.length];
-  const initials = getInitials(title);
-  const src = `https://image.thum.io/get/width/800/crop/600/noanimate/${url}`;
-
-  useEffect(() => {
-    if (status !== 'loading') return;
-    const img = new Image();
-    img.onload = () => {
-      writeCache(url, 'ok');
-      setStatus('ok');
-    };
-    img.onerror = () => {
-      writeCache(url, 'fail');
-      setStatus('fail');
-    };
-    img.src = src;
-  }, [src, url, status]);
+  const domain = getDomain(url);
 
   return (
-    <div className={`absolute inset-0 bg-gradient-to-br ${palette}`}>
-      {/* Skeleton shimmer while loading */}
-      {status === 'loading' && (
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-muted/40" />
-          <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+    <div className={`absolute inset-0 bg-gradient-to-br ${palette} overflow-hidden`}>
+      {/* Decorative grid */}
+      <div
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage:
+            'linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+          color: 'white',
+        }}
+      />
+
+      {/* Glow blobs */}
+      <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-white/20 blur-3xl" />
+      <div className="absolute -bottom-20 -right-10 h-64 w-64 rounded-full bg-black/20 blur-3xl" />
+
+      {/* Title content */}
+      <div className="relative z-10 flex h-full w-full flex-col justify-between p-5 sm:p-6 text-white">
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-red-400" />
+          <span className="h-2 w-2 rounded-full bg-yellow-300" />
+          <span className="h-2 w-2 rounded-full bg-green-400" />
+          <span className="ml-2 truncate text-[11px] font-mono opacity-80">{domain}</span>
         </div>
-      )}
 
-      {/* Loaded image */}
-      {status === 'ok' && (
-        <img
-          src={src}
-          alt={`${title} preview`}
-          loading="lazy"
-          className="absolute inset-0 h-full w-full object-cover object-top"
-        />
-      )}
-
-      {/* Initials fallback */}
-      {status === 'fail' && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-5xl sm:text-6xl font-black tracking-tight text-foreground/80 select-none drop-shadow-sm">
-            {initials}
-          </span>
+        <div>
+          <h4 className="font-black uppercase leading-[0.95] tracking-tight drop-shadow-md text-2xl sm:text-3xl md:text-4xl">
+            {title}
+          </h4>
+          <div className="mt-3 h-[3px] w-12 bg-white/80 rounded-full" />
         </div>
-      )}
+      </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
     </div>
   );
 }
