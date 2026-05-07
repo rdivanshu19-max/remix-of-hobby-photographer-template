@@ -255,8 +255,18 @@ export default function Home() {
               </h2>
             </ScrollReveal>
 
+            <ScrollReveal delay={0.05}>
+              <div className="mt-10">
+                <VibeMatch
+                  projects={projects.map((p) => ({ title: p.title, description: p.description, category: p.category }))}
+                  onResults={setVibeResults}
+                  active={!!vibeResults}
+                />
+              </div>
+            </ScrollReveal>
+
             <ScrollReveal delay={0.1}>
-              <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex flex-wrap gap-2 sm:gap-3">
                   {projectCategories.map((cat) => {
                     const isActive = activeCategory === cat;
@@ -285,7 +295,8 @@ export default function Home() {
                     id="sort-projects"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as 'newest' | 'az')}
-                    className="px-3 py-2 rounded-full text-sm font-medium bg-transparent text-foreground border border-border hover:border-primary/40 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    disabled={!!vibeResults}
+                    className="px-3 py-2 rounded-full text-sm font-medium bg-transparent text-foreground border border-border hover:border-primary/40 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-40"
                   >
                     <option value="newest">Newest</option>
                     <option value="az">A–Z</option>
@@ -302,24 +313,32 @@ export default function Home() {
                 {filteredProjects.map((project, i) => (
                   <ScrollReveal key={project.title} delay={Math.min(i * 0.1, 0.4)}>
                     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card hover:border-primary/30 transition-all duration-500 hover:shadow-xl">
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="relative block aspect-[16/10] overflow-hidden"
-                        aria-label={`Open ${project.title}`}
+                      <button
+                        type="button"
+                        onClick={() => setCaseStudy({ project, index: i })}
+                        className="relative block aspect-[16/10] overflow-hidden text-left"
+                        aria-label={`Open case study for ${project.title}`}
                       >
                         <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
-                          <ProjectThumbnail url={project.link} title={project.title} />
+                          <ProjectThumbnail url={project.link} title={project.title} index={i} />
                         </div>
-                      </a>
+                        <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-black/40 backdrop-blur px-2.5 py-1 text-[11px] font-medium text-white opacity-0 group-hover:opacity-100 transition">
+                          <Maximize2 className="size-3" /> Case study
+                        </span>
+                      </button>
 
                       <div className="flex flex-1 flex-col p-5 sm:p-6">
                         <div className="flex items-center justify-between mb-3">
                           <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
                             {project.category}
                           </span>
-                          <span className="text-xs text-muted-foreground">{project.year}</span>
+                          {project._vibe ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-gradient-to-r from-fuchsia-600 to-indigo-600 text-white">
+                              <Sparkles className="size-3" /> {Math.round(project._vibe.score)}% match
+                            </span>
+                          ) : (
+                            <span className="text-xs text-muted-foreground">{project.year}</span>
+                          )}
                         </div>
                         <div className="flex items-start justify-between gap-3 mb-2">
                           <h3 className="text-xl sm:text-2xl font-semibold group-hover:text-primary transition-colors">
@@ -329,18 +348,34 @@ export default function Home() {
                             {project.year}
                           </span>
                         </div>
+                        {project._vibe && (
+                          <p className="mb-3 text-xs sm:text-sm italic text-foreground/80 border-l-2 border-fuchsia-500 pl-3">
+                            “{project._vibe.reason}”
+                          </p>
+                        )}
                         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-4">
                           {project.description}
                         </p>
-                        <a
-                          href={project.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-5 inline-flex items-center justify-center gap-2 w-full sm:w-auto sm:self-start px-5 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-all"
-                        >
-                          View Live Project · {project.year}
-                          <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                        </a>
+                        <div className="mt-5 flex flex-wrap items-center gap-3">
+                          <MagneticButton
+                            as="a"
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition-all"
+                          >
+                            View Live · {project.year}
+                            <ArrowRight className="size-4" />
+                          </MagneticButton>
+                          <button
+                            type="button"
+                            onClick={() => setCaseStudy({ project, index: i })}
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition"
+                          >
+                            Read case study
+                            <ArrowRight className="size-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </ScrollReveal>
