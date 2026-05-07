@@ -96,9 +96,25 @@ export default function Home() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'newest' | 'az'>('newest');
-  const filteredProjects = (activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory))
-    .slice()
-    .sort((a, b) => (sortBy === 'az' ? a.title.localeCompare(b.title) : b.year - a.year));
+  const [vibeResults, setVibeResults] = useState<VibeMatchResult[] | null>(null);
+  const [caseStudy, setCaseStudy] = useState<{ project: CaseStudyProject; index: number } | null>(null);
+
+  const filteredProjects = useMemo(() => {
+    const base = activeCategory === 'All' ? projects : projects.filter((p) => p.category === activeCategory);
+
+    if (vibeResults && vibeResults.length) {
+      const reasonMap = new Map(vibeResults.map((r) => [r.title, r]));
+      return base
+        .filter((p) => reasonMap.has(p.title))
+        .sort((a, b) => (reasonMap.get(b.title)!.score) - (reasonMap.get(a.title)!.score))
+        .map((p) => ({ ...p, _vibe: reasonMap.get(p.title) }));
+    }
+
+    return base
+      .slice()
+      .sort((a, b) => (sortBy === 'az' ? a.title.localeCompare(b.title) : b.year - a.year))
+      .map((p) => ({ ...p, _vibe: undefined as VibeMatchResult | undefined }));
+  }, [activeCategory, sortBy, vibeResults]);
 
   return (
     <>
