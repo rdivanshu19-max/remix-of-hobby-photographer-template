@@ -10,6 +10,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { lazy, Suspense } from "react";
 import { LoadingFallback } from "@/components/ui/LoadingFallback";
 import { ChatWidget } from "@/components/chatbot/ChatWidget";
+import { CursorTrail } from "@/components/effects/CursorTrail";
+import { TimeBasedTheme } from "@/components/providers/TimeBasedTheme";
 
 const Home = lazy(() => import("./pages/Home"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -20,6 +22,7 @@ const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
+        <TimeBasedTheme />
         <TooltipProvider>
           <Toaster />
           <Sonner />
@@ -35,6 +38,7 @@ const App = () => (
             </Layout>
           </BrowserRouter>
           <ChatWidget />
+          <CursorTrail />
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
