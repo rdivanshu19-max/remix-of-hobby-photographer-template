@@ -1,26 +1,20 @@
 interface ProjectThumbnailProps {
   url: string;
   title: string;
+  index?: number;
 }
 
-// Palettes tuned to read well on both light & dark backgrounds:
-// deep saturated base + brighter mid + accent highlight
+// 8 distinct, dark/light-mode balanced palettes
 const PALETTES = [
-  'from-indigo-700 via-purple-600 to-fuchsia-500',
-  'from-emerald-700 via-teal-600 to-cyan-400',
-  'from-orange-700 via-rose-600 to-pink-500',
-  'from-blue-800 via-sky-600 to-cyan-400',
-  'from-violet-800 via-fuchsia-600 to-rose-500',
-  'from-green-800 via-lime-600 to-yellow-400',
-  'from-slate-800 via-zinc-700 to-neutral-500',
-  'from-red-800 via-orange-600 to-amber-400',
+  'from-indigo-700 via-purple-600 to-fuchsia-500',   // 0 violet
+  'from-emerald-700 via-teal-600 to-cyan-400',       // 1 emerald
+  'from-orange-700 via-rose-600 to-pink-500',        // 2 sunset
+  'from-blue-800 via-sky-600 to-cyan-400',           // 3 ocean
+  'from-violet-800 via-fuchsia-600 to-rose-500',     // 4 magenta
+  'from-green-800 via-lime-600 to-yellow-400',       // 5 lime
+  'from-slate-800 via-zinc-700 to-neutral-500',      // 6 graphite
+  'from-red-800 via-orange-600 to-amber-400',        // 7 fire
 ];
-
-function hash(str: string) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h << 5) - h + str.charCodeAt(i);
-  return Math.abs(h);
-}
 
 function getDomain(url: string) {
   try {
@@ -30,14 +24,16 @@ function getDomain(url: string) {
   }
 }
 
-export function ProjectThumbnail({ url, title }: ProjectThumbnailProps) {
-  const palette = PALETTES[hash(title) % PALETTES.length];
+export function ProjectThumbnail({ url, title, index = 0 }: ProjectThumbnailProps) {
+  // Step by 3 (coprime to 8) so neighbors never share a palette
+  const palette = PALETTES[(index * 3) % PALETTES.length];
   const domain = getDomain(url);
 
   return (
     <div className={`absolute inset-0 bg-gradient-to-br ${palette} overflow-hidden ring-1 ring-inset ring-white/10`}>
-      {/* Tone layer — slightly darken in light mode for text contrast, lift in dark */}
+      {/* Tone layer for light-mode contrast */}
       <div className="absolute inset-0 bg-black/10 dark:bg-black/0" />
+
       {/* Decorative grid */}
       <div
         className="absolute inset-0 opacity-20"
