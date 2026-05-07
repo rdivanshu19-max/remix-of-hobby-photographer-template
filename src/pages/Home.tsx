@@ -1,9 +1,12 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box, Instagram } from 'lucide-react';
+import { ArrowRight, Mail, ExternalLink, Sparkles, Zap, Layers, MousePointer, Gauge, Box, Instagram, Maximize2 } from 'lucide-react';
 import { SEOHead } from '@/components/seo/SEOHead';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ProjectThumbnail } from '@/components/portfolio/ProjectThumbnail';
-import { useRef, useState } from 'react';
+import { CaseStudyModal, type CaseStudyProject } from '@/components/portfolio/CaseStudyModal';
+import { VibeMatch, type VibeMatchResult } from '@/components/portfolio/VibeMatch';
+import { MagneticButton } from '@/components/effects/MagneticButton';
+import { useMemo, useRef, useState } from 'react';
 
 const services = [
   { icon: Box, title: '3D Landing Pages', description: 'Immersive three-dimensional experiences that captivate from the first scroll.' },
